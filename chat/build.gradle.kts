@@ -69,6 +69,6 @@ tasks.register<JavaExec>("run") {
     dependsOn(tasks.named("frontendBrowserDistribution"))
     dependsOn(tasks.named("backendMainClasses"))
     mainClass.set("io.ktor.samples.chat.backend.ChatApplicationKt")
-    classpath(kotlin.jvm("backend").compilations.getByName("main").runtimeDependencyFiles)
+    classpath(configurations.getByName("backendRuntimeClasspath"), tasks.named("backendJar"))
     args = listOf()
 }
