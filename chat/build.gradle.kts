@@ -3,6 +3,7 @@ plugins {
     kotlin("plugin.serialization") version "2.2.20"
 }
 
+@OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl::class)
 kotlin {
     js("frontend", IR) {
         browser {
@@ -20,7 +21,7 @@ kotlin {
 
     sourceSets.all {
         dependencies {
-            implementation(enforcedPlatform("io.ktor:ktor-bom:3.3.1"))
+            implementation(project.dependencies.platform("io.ktor:ktor-bom:3.3.1"))
         }
     }
 
@@ -47,7 +48,6 @@ kotlin {
 
         val frontendMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-js")
                 implementation("io.ktor:ktor-client-websockets")
                 implementation("io.ktor:ktor-client-js")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.6.4")
@@ -69,6 +69,6 @@ tasks.register<JavaExec>("run") {
     dependsOn(tasks.named("frontendBrowserDistribution"))
     dependsOn(tasks.named("backendMainClasses"))
     mainClass.set("io.ktor.samples.chat.backend.ChatApplicationKt")
-    classpath(kotlin.targets["backend"].compilations["main"].runtimeDependencyFiles)
+    classpath(kotlin.jvm("backend").compilations.getByName("main").runtimeDependencyFiles)
     args = listOf()
 }
